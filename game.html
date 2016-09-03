@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="user-scalable=no" />
+	<style>
+		canvas{
+			position: absolute;
+			left: 0;
+			top: 0;
+
+		}
+		img{
+			display: none;
+		}
+		.finger{
+			background: url("images/finger.png") no-repeat;
+			background-size: 100% 100%;
+			display: block;
+			position: absolute;
+			left: 550px;
+			top: 860px;
+			width: 300px;
+			height: 300px;
+			z-index: 3;
+			-webkit-animation: moveFinger 0.6s infinite;
+		}
+		@-webkit-keyframes moveFinger{
+			0%{
+				-webkit-transform: translateY(0px);
+			}
+
+			100%{
+				-webkit-transform: translateY(-250px);
+			}
+		}
+
+		.circle{
+			background: url("images/circle.png") no-repeat;
+			display: block;
+			position: absolute;
+			left: 430px;
+			top: 850px;
+			width: 200px;
+			height: 200px;
+			z-index: 1;
+			-webkit-animation: changeCircle 0.6s infinite;
+		}
+		
+		@-webkit-keyframes changeCircle{
+			0%{
+				-webkit-transform: scale(1,1);
+			}
+
+			100%{
+				-webkit-transform: scale(1.5,1.5);
+			}
+		}
+
+		.arrow{
+			background: url("images/white_arrow.png") no-repeat;
+			display: block;
+			position: absolute;
+			left: 500px;
+			top: 870px;
+			width: 100px;
+			height: 100px;
+			z-index: 2;
+			-webkit-animation: moveArrow 0.6s infinite;
+		}
+
+		@-webkit-keyframes moveArrow{
+			0%{
+				-webkit-transform: translateY(0px) scale(1.2,1.2);
+			}
+
+			100%{
+				-webkit-transform: translateY(-100px) scale(1.2,1.2);
+			}
+		}
+
+		.gift,.gift1,.gift2,.gift3{
+			/*background: url("images/gift.jpg") no-repeat;
+			background-size: 100% 100%;*/
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			width: 980px;
+			height: 1740px;
+		}
+		.gift{
+			background: url("images/gift.jpg") no-repeat 100% 100%;
+			background-size: 100% 100%;
+		}
+		.gift1{
+			background: url("images/gift1.jpg") no-repeat;
+			background-size: 100% 100%;
+		}
+		.gift2{
+			background: url("images/gift2.jpg") no-repeat;
+			background-size: 100% 100%;
+		}
+		.gift3{
+			background: url("images/gift3.jpg") no-repeat;
+			background-size: 100% 100%;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="finger" style="display: none">
+	</div>
+	<div class="arrow" style="display: none">
+	</div>
+	<div class="circle" style="display: none">
+	</div>
+	<canvas id="canvasHomePage" width="980" height="1740"></canvas>
+	<canvas id="canvas0" width="980" height="1740" style="display: none">
+	</canvas>
+	<canvas id="canvas1" width="980" height="1740" style="display: none"><!-- ÓÎÏ·Ò³ -->
+	</canvas>
+	<canvas id="canvas2" width="980" height="1740" style="display: none">
+	</canvas>
+
+	<div class="gift" style="display: none">
+		<div class="gift1_btn"></div>
+		<div class="gift2_btn"></div>
+		<div class="gift3_btn"></div>
+	</div>
+	<div class="gifts" style="display: none">
+		<div class="gift1" style="display: none"></div>
+		<div class="gift2" style="display: none"></div>
+		<div class="gift3" style="display: none"></div>
+	</div>
+	<img id="bg"src="images/page_game_bg.jpg">
+	<img id="card"src="images/page_card_money_1.jpg">
+	<img id="imgHomePage"src="images/homePage.jpg">
+	<img id="imgResultLose"src="images/result_lose.jpg">
+	<img id="imgResultWin"src="images/result_win.jpg">
+
+	<script>
+		window.onload=function(){
+			homePage();
+		}
+
+		// function adjustHori(hori){
+		// 	return hori*1.5313; 
+		// }
+		// function adjustVer(ver){
+		// 	return ver*1.7262;
+		// }
+
+		var canvasHomePage=document.getElementById("canvasHomePage"),
+			ctxHomePage=canvasHomePage.getContext("2d");
+		var canvas0=document.getElementById("canvas0"),
+			ctx0=canvas0.getContext("2d");
+		var canvas1=document.getElementById("canvas1"),
+			ctx1=canvas1.getContext("2d");
+		var canvas2=document.getElementById("canvas2"),
+			ctx2=canvas2.getContext("2d");
+
+		function homePage(){
+			canvasHomePage.addEventListener("touchstart",function(ev){
+				var x=ev.touches[0].pageX,
+					y=ev.touches[0].pageY;
+
+				if(116<x&&x<475&&1499<y&&y<1597){
+					canvasHomePage.style.display="none";
+					startGame();
+				}else if(506<x&&x<860&&1501<y&&y<1605){
+					var gift=document.getElementsByClassName("gift")[0];
+					gift.style.display="block";
+				}//331 868 562 928
+			},false);
+
+			(function(){
+				var imgHomePage=document.getElementById("imgHomePage");
+
+				ctxHomePage.drawImage(imgHomePage,0,0,980,1740);
+				ctxHomePage.fillStyle="rgb(140,15,16)";
+				ctxHomePage.font="bolder 55px MicrosoftYaHei";
+				ctxHomePage.fillText("开始游戏",190,1570);
+				ctxHomePage.fillText("领取面膜",545,1570);
+			})()
+		}
+//--------------------------------------------
+		function startGame(){
+			canvas0.style.display="block";
+			canvas1.style.display="block";
+
+			var finger=document.getElementsByClassName("finger")[0],
+				arrow=document.getElementsByClassName("arrow")[0],
+				circle=document.getElementsByClassName("circle")[0];
+
+			finger.style.display="block";
+			arrow.style.display="block";
+			circle.style.display="block";
+
+			ctx1.fillStyle="rgb(185,159,103)";
+			ctx1.font="bolder 50px MicrosoftYaHei";
+			ctx1.textAlign="center";
+			ctx1.fillText("剩余8.0 s",500,800);
+
+			(function drawBackground(){
+				var imgbg=document.getElementById("bg"),
+					imgsurprise=document.getElementById("surprise");
+
+					ctx0.drawImage(imgbg,0,0,980,1740);
+			})();
+
+			arrow.addEventListener("touchstart",start,false);
+			circle.addEventListener("touchstart",start,false);
+			finger.addEventListener("touchstart",start,false);
+			canvas1.addEventListener("touchstart",start,false);
+
+			function start(){
+				finger.style.display="none";
+				arrow.style.display="none";
+				circle.style.display="none";
+				canvas1.removeEventListener("touchstart",start);
+				game();
+			}
+
+//游戏函数----------------------------------------------
+			function game(){
+//定义数据------------------------
+				var imgCard=document.getElementById("card"),
+					cards=[],
+					time=8.0,
+					times=0,
+					clearCards=[],
+					stopRender;
+
+				(function createCards(){
+					for(var i=0;i<100;i++){
+						cards[i]={
+							top: 868
+						};
+					}
+				})()
+
+//数据函数-----------------
+				function moveCard(n){
+					clearCards[n]=setInterval(function(){
+						if(cards[n].top>-1320){
+							cards[n].top-=200;
+						}else{
+							clearInterval(clearCards[n]);
+						}
+					},30);
+				}
+
+				function tick(){
+					if(time>0){
+						time=(time-0.1).toFixed(1);
+						setTimeout(tick,100);
+					}else{
+						clearTimeout(stopRender);
+						ctx1.clearRect(0,0,980,1740);
+						canvas0.style.display="none";
+						canvas1.style.display="none";
+						showResult(times);
+					}
+				}
+
+//视觉函数---------------------
+				function render(){
+					clearInterface();
+					renderTimeAndMoney();
+					for(var i=times; i>=0;i--){
+						if(cards[i].top>-1320){
+							ctx1.drawImage(imgCard,162,cards[i].top,693,1320);
+						}
+					}
+
+					stopRender=setTimeout(render,30);
+				}
+
+				function clearInterface(){
+					ctx1.clearRect(0,0,canvas1.width,canvas1.height);
+				}
+
+				function renderTimeAndMoney(){
+					ctx1.fillText("剩余"+time+"秒",500,800);
+					ctx1.fillText(times+"张",500,750);
+				}
+			
+//---------------------------------------------
+				window.addEventListener("touchstart",function(ev){
+					var x=ev.touches[0].pageX,
+						y=ev.touches[0].pageY;
+
+					if(200<x&&x<850&&870<y&&y<1740){
+						moveCard(times);
+						times+=1;
+					}
+				},false);
+//调用--------------------------
+				render();
+				tick();
+			}
+		}
+//结束-------------------------------------------
+		function showResult(n){
+			var imgResultLose=document.getElementById("imgResultLose"),
+				imgResultWin=document.getElementById("imgResultWin");
+
+			canvas2.style.display="block";
+			ctx2.fillStyle="rgb(255,255,255)";
+			ctx2.font="bolder 80px MicrosoftYaHei";
+			ctx2.textAlign="center";
+
+			if(n<=28){
+				ctx2.drawImage(imgResultLose,0,0,980,1740);
+				ctx2.fillText(n,650,645);
+				canvas2.addEventListener("touchstart",restart,false);
+
+				function restart(ev){
+					var x=ev.touches[0].pageX,
+						y=ev.touches[0].pageY;
+					if(244<x&&x<735&&y>1494&&y<1606){
+						canvas2.removeEventListener("touchstart",restart);
+						canvas2.style.display="none";
+						startGame();
+					}
+				}
+			}else{
+				canvas2.removeEventListener("touchstart",restart);
+				ctx2.drawImage(imgResultWin,0,0,980,1740);
+				ctx2.fillText(n,650,645);
+				canvas2.addEventListener("touchstart",function(ev){
+					var x=ev.touches[0].pageX,
+						y=ev.touches[0].pageY;
+					if(116<x&&x<475&&1499<y&&y<1597){
+						// canvas2.style.display="none";
+						alert(1)
+						maskApplication();
+					}else if(506<x&&x<860&&1501<y&&y<1605){
+						// canvas2.style.display="none";
+						alert(2);
+					}
+				},false);
+			}
+		}
+
+		
+	</script>
+</body>
+</html>
